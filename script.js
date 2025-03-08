@@ -92,6 +92,135 @@ console.log(securephonenumber(mytext))
 // NOW THE EASY WAY WITH CALLABLE CAPTURED REGEX:
 
 function securephonenumber2(text) {
-    return text.replace(/(\b09\d{2})\d{3}(\d{4}\b)/g, "$1***$2")
+    return text.replace(/(\b09\d{2})\d{3}(\d{4}\b)/g, "$1***$2") // capture () using $
 }
 console.log(securephonenumber2(mytext))
+
+
+let myMap = new Map();
+myMap.set(1, 'Car').set('weight', 1000).set('color', 'Blue');
+console.log(myMap)
+// Map(3) {1 => "Car", "weight" => 1000, "color" => "Blue"}
+
+let personMap = new Map();
+
+personMap.set('firstName', 'Abbas').set('lastName', 'Moqaddam');
+
+// Map {"firstName" => "Abbas", "lastName" => "Moqaddam"}
+
+let personArray = [...personMap];
+
+// [ ["firstName" , "Abbas"] , ["lastName" , "Moqaddam"] ]
+
+personArray = Array.from(personMap);
+
+// [ ["firstName" , "Abbas"] , ["lastName" , "Moqaddam"] ]
+
+let person = new Map();
+
+person.set('firstName', 'Abbas').set('lastName', 'Moqaddam').set('age', 33);
+
+person.get('lastName');
+
+// "Moqaddam"
+
+person.size;
+
+// 3
+
+person.delete('age');
+
+// true
+
+person;
+
+// Map {"firstName" => "Abbas", "lastName" => "Moqaddam"}
+
+person.delete('weight');
+
+// false
+
+person.clear();
+
+person;
+
+// Map {}
+
+obj1 = {
+    1: 1,   // Values in both objects and maps can be almost anything
+    "2": "2",   // But KEYS in OBJECTS are only STRINGS even if we dont mention it in object defining
+}              // But in MAPS KEYS can be almost ANYTHING form number and string to functions, etc.
+console.log(obj1)
+console.log(Object.keys(obj1))
+console.log(Object.values(obj1))
+console.log(Object.entries(obj1)) // turn Objects to Arrays
+console.log(Array.from(obj1)) // only work with Maps
+
+console.log(...personMap.keys()) //maps is so like objects but faster safer with guaranteed order and
+// directly iterable using forEach & for ... of  and countable using .size except for (Maps are not JSON-compatible)
+
+/*
+
+        // Objects force keys to be strings, but Map allows any type. //
+
+let obj = {};
+let map = new Map();
+
+obj[1] = "one";       // Key is converted to a string: "1"
+map.set(1, "one");    // Key remains a number
+
+console.log(obj["1"]); // "one" (converted)
+console.log(map.get(1)); // "one" (not converted)
+
+        // Objects don’t maintain key order reliably, but Maps do. //
+
+let obj = {};
+let map = new Map();
+
+obj["b"] = 2;
+obj["a"] = 1;
+map.set("b", 2);
+map.set("a", 1);
+
+console.log(Object.keys(obj)); // ['b', 'a'] (not guaranteed order)
+console.log([...map.keys()]);  // ['b', 'a'] (insertion order)
+
+        // Map is faster for frequent insertions and lookups. //
+
+let map = new Map();
+for (let i = 0; i < 1000000; i++) {
+    map.set(i, i * 2);
+}
+
+console.time("Map Lookup");
+console.log(map.get(999999));
+console.timeEnd("Map Lookup"); 
+
+let obj = {};
+for (let i = 0; i < 1000000; i++) {
+    obj[i] = i * 2;
+}
+
+console.time("Object Lookup");
+console.log(obj[999999]);
+console.timeEnd("Object Lookup");
+
+        // Objects don’t have a built-in way to get their size, but Map does. //
+
+let obj = { a: 1, b: 2, c: 3 };
+console.log(Object.keys(obj).length); // 3
+
+let map = new Map([["a", 1], ["b", 2], ["c", 3]]);
+console.log(map.size); // 3 (directly available)
+
+        // Maps are directly iterable, while Objects require Object.entries(). //
+
+let obj = { a: 1, b: 2 };
+for (let key in obj) {
+    console.log(key, obj[key]); // a 1, b 2
+}
+
+let map = new Map([["a", 1], ["b", 2]]);
+map.forEach((value, key) => console.log(key, value)); // a 1, b 2
+
+*/
