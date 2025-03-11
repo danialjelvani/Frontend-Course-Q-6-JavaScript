@@ -194,7 +194,7 @@ for (let i = 0; i < 1000000; i++) {
 
 console.time("Map Lookup");
 console.log(map.get(999999));
-console.timeEnd("Map Lookup"); 
+console.timeEnd("Map Lookup");
 
 let obj = {};
 for (let i = 0; i < 1000000; i++) {
@@ -224,3 +224,109 @@ let map = new Map([["a", 1], ["b", 2]]);
 map.forEach((value, key) => console.log(key, value)); // a 1, b 2
 
 */
+
+
+
+function makeCounter() {
+    let counter = 0; // ITS SAFER AND MORE STABLE TO DEFINE IT HERE AND USE CLOSURES
+    return function () { // WHEN USING UNNAMED CLOSURE FUNCTIONS WE RETURN IT INLINE OTHERWISE WE SHOULD RETURN IT LATER.
+        return ++counter;
+    }
+}
+const clicked = makeCounter();
+console.log(clicked()); // 1
+console.log(clicked()); // 2
+
+const dblClicked = makeCounter();
+console.log(dblClicked()); // 1
+console.log(dblClicked()); // 2
+
+// HOF HIGHER ORDER FUNCTION
+
+function getAreaFunctions(shapes) {
+    const areaClaculator = {
+        square: x => x * x,
+        circle: x => Math.PI * x * x,
+        rectangle: (x, y) => x * y,
+        triangle: (x, y) => 0.5 * x * y,
+    };
+    return shapes.map(shape => areaClaculator[shape])
+}
+
+const areafunctions = getAreaFunctions(['square', 'circle', 'rectangle', 'triangle']);
+console.log(areafunctions[0](5))
+console.log(areafunctions[1](3))
+console.log(areafunctions[2](1, 6))
+
+
+// CALLBACK HELL
+
+function callMeMaybe() {
+    setTimeout(() => { // ITS OK CUZ CALLME IS DEFINED ATM
+        console.log(callMe);
+    }, 1000);
+    const callMe = "hi! I am now here!";
+}
+callMeMaybe();
+
+function callMeMaybe2() {
+    let value;
+    setTimeout(() => { // ITS NOT OK CUZ VALUE IS NOT DEFINED ATM
+        value = 'without callback';
+    }, 1000);
+    console.log(value)
+}
+callMeMaybe2();
+
+function callMeMaybe3(callback) {
+    let value;
+    setTimeout(() => { // USING CALLBACK HELL
+        value = 'using callback';
+        callback(value)
+    }, 1000);
+}
+callMeMaybe3(value => console.log(value));
+
+
+
+
+// TIMEIT FUNCTION FOR BOTH SYNC & ASYNC FUNCTIONS
+
+
+function timeit(fn) {
+    return async function (...args) {
+        const start = performance.now(); // Start timing
+        const value = fn(...args); // Call the function
+
+        if (value instanceof Promise) {
+            // If it's an async function, await it
+            const awaitedValue = await value;
+            return { value: awaitedValue, time: Math.round(performance.now() - start) };
+        }
+
+        // If it's a sync function, return immediately
+        return { value, time: Math.round(performance.now() - start) };
+    };
+}
+
+// ✅ Example 1: Async function
+function asyncFn(t) {
+    return new Promise((res) => setTimeout(() => res(`done after ${t}ms`), t));
+}
+
+// ✅ Example 2: Sync function
+function syncFn(n) {
+    let sum = 0;
+    for (let i = 0; i < n; i++) {
+        sum += i; // Simulating some CPU work
+    }
+    return sum;
+}
+
+// 🔹 Testing with Async Function
+timeit(asyncFn)(50).then(console.log);
+// Example Output: { value: "done after 50ms", time: ~50 }
+
+// 🔹 Testing with Sync Function
+timeit(syncFn)(1_000_000).then(console.log);
+// Example Output: { value: 499999500000, time: ~5 }
